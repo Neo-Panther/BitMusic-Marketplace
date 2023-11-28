@@ -43,7 +43,7 @@ const Create = ({ marketplace, nft }) => {
     await(await nft.setApprovalForAll(marketplace.address, true)).wait()
     // add nft to marketplace
     const listingPrice = ethers.utils.parseEther(price.toString())
-    await(await marketplace.makeItem(nft.address, id, listingPrice)).wait()
+    await(await marketplace.makeRelease(nft.address, id, listingPrice)).wait()
   }
   return (
     <div className="container-fluid mt-5">
@@ -59,7 +59,7 @@ const Create = ({ marketplace, nft }) => {
                 accept='.mp3'
               />
               <Form.Control onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name of the audio file" />
-              <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description of the item" />
+              <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description of the release" />
               <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" />
               <Form.Control onChange={(e) => setPublisher(e.target.value)} size="lg" required type="text" placeholder="Name of the publisher" />
               <div className="d-grid px-0">

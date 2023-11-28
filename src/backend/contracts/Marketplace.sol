@@ -6,12 +6,12 @@ import "hardhat/console.sol";
 
 contract Marketplace is ReentrancyGuard {
   // Variables
-  address payable public immutable feeAccount; // the account that receives fees
-  uint public immutable feePercent; // the fee percentage on sales 
-  uint public itemCount; 
+  address payable public immutable hostAcc; // account that receives fee percentage fees
+  uint public immutable hostFeePercent; // fee percentage on each release: discourages spam and rewards the platform creator
+  uint public releaseCount; 
 
-  struct Item {
-    uint itemId;
+  struct Release {
+    uint releaseId;
     IERC721 nft;
     uint tokenId;
     uint price;
@@ -19,18 +19,18 @@ contract Marketplace is ReentrancyGuard {
     bool sold;
   }
 
-  // itemId -> Item
-  mapping(uint => Item) public items;
+  // releaseId -> Release
+  mapping(uint => Release) public releases;
 
   event Offered(
-    uint itemId,
+    uint releaseId,
     address indexed nft,
     uint tokenId,
     uint price,
     address indexed seller
   );
   event Bought(
-    uint itemId,
+    uint releaseId,
     address indexed nft,
     uint tokenId,
     uint price,
@@ -38,72 +38,71 @@ contract Marketplace is ReentrancyGuard {
     address indexed buyer
   );
 
-  constructor(uint _feePercent) {
-    feeAccount = payable(msg.sender);
-    feePercent = _feePercent;
+  constructor(uint _hostFeePercent) {
+    hostAcc = payable(msg.sender);
+    hostFeePercent = _hostFeePercent;
   }
 
-  // Make item to offer on the marketplace
-  function makeItem(IERC721 _nft, uint _tokenId, uint _price) external nonReentrant {
+  // Make release to offer on the marketplace
+  function makeRelease(IERC721 _nft, uint _tokenId, uint _price) external nonReentrant {
     require(_price > 0, "Price must be greater than zero");
-    // increment itemCount
-    itemCount ++;
+    releaseCount ++;
     // transfer nft
     _nft.transferFrom(msg.sender, address(this), _tokenId);
-    // add new item to items mapping
-    items[itemCount] = Item (
-        itemCount,
-        _nft,
-        _tokenId,
-        _price,
-        payable(msg.sender),
-        false
+    // add new release to releases mapping
+    releases[releaseCount] = Release (
+      releaseCount,
+      _nft,
+      _tokenId,
+      _price,
+      payable(msg.sender),
+      false
     );
     // emit Offered event
     emit Offered(
-      itemCount,
+      releaseCount,
       address(_nft),
       _tokenId,
       _price,
       msg.sender
     );
   }
-  function relist(Item memory item) external nonReentrant {
-    item.nft.transferFrom(msg.sender, address(this), item.tokenId);
+  function relist(Release memory release) external nonReentrant {
+    release.nft.transferFrom(msg.sender, address(this), release.tokenId);
     // emit Offered event
     emit Offered(
-      itemCount,
-      address(item.nft),
-      item.tokenId,
-      item.price,
+      releaseCount,
+      address(release.nft),
+      release.tokenId,
+      release.price,
       msg.sender
     );
   }
-  function purchaseItem(uint _itemId) external payable nonReentrant {
-    uint _totalPrice = getTotalPrice(_itemId);
-    Item storage item = items[_itemId];
-    require(_itemId > 0 && _itemId <= itemCount, "item doesn't exist");
-    require(msg.value >= _totalPrice, "not enough ether to cover item price and market fee");
-    require(!item.sold, "item already sold");
+  function purchaseRelease(uint _releaseId) external payable nonReentrant {
+    uint _totalPrice = getTotalPrice(_releaseId);
+    Release storage release = releases[_releaseId];
+    require(_releaseId > 0 && _releaseId <= releaseCount, "release doesn't exist");
+    require(msg.value >= _totalPrice, "not enough ether to cover release price and market fee");
+    require(!release.sold, "release already sold");
     // pay seller and feeAccount
-    item.seller.transfer(item.price);
-    feeAccount.transfer(_totalPrice - item.price);
-    // update item to sold
-    item.sold = true;
+    release.seller.transfer(release.price);
+    hostAcc.transfer(_totalPrice - release.price);
+    // update release to sold
+    release.sold = true;
     // transfer nft to buyer
-    item.nft.transferFrom(address(this), msg.sender, item.tokenId);
+    release.nft.transferFrom(address(this), msg.sender, release.tokenId);
     // emit Bought event
     emit Bought(
-      _itemId,
-      address(item.nft),
-      item.tokenId,
-      item.price,
-      item.seller,
+      _releaseId,
+      address(release.nft),
+      release.tokenId,
+      release.price,
+      release.seller,
       msg.sender
     );
   }
 
-  function getTotalPrice(uint _itemId) view public returns(uint){
-    return((items[_itemId].price*(100 + feePercent))/100);
+  function getTotalPrice(uint _releaseId) view public returns(uint){
+    return((releases[_releaseId].price*(100 + hostFeePercent))/100);
   }
 }

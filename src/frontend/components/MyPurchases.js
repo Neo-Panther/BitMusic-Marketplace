@@ -6,11 +6,11 @@ import market from './music_store.avif'
 export default function MyPurchases({ marketplace, nft, account }) {
   const [loading, setLoading] = useState(true)
   const [purchases, setPurchases] = useState([])
-  const loadPurchasedItems = async () => {
-    // Fetch purchased items from marketplace by quering Offered events with the buyer set as the user
+  const loadPurchasedReleases = async () => {
+    // Fetch purchased releases from marketplace by quering Offered events with the buyer set as the user
     const filter =  marketplace.filters.Bought(null,null,null,null,null,account)
     const results = await marketplace.queryFilter(filter)
-    //Fetch metadata of each nft and add that to listedItem object.
+    //Fetch metadata of each nft and add that to listedRelease object.
     const purchases = await Promise.all(results.map(async i => {
       // fetch arguments from each result
       i = i.args
@@ -19,24 +19,24 @@ export default function MyPurchases({ marketplace, nft, account }) {
       // use uri to fetch the nft metadata stored on ipfs 
       const response = await fetch(uri)
       const metadata = await response.json()
-      // get total price of item (item price + fee)
-      const totalPrice = await marketplace.getTotalPrice(i.itemId)
-      // define listed item object
-      let purchasedItem = {
+      // get total price of release (release price + fee)
+      const totalPrice = await marketplace.getTotalPrice(i.releaseId)
+      // define listed release object
+      let purchasedRelease = {
         totalPrice,
         price: i.price,
-        itemId: i.itemId,
+        releaseId: i.releaseId,
         name: metadata.name,
         description: metadata.description,
         uri: metadata.music
       }
-      return purchasedItem
+      return purchasedRelease
     }))
     setLoading(false)
     setPurchases(purchases)
   }
   useEffect(() => {
-    loadPurchasedItems()
+    loadPurchasedReleases()
   })
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
@@ -48,15 +48,15 @@ export default function MyPurchases({ marketplace, nft, account }) {
       {purchases.length > 0 ?
         <div className="px-5 container">
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
-            {purchases.map((item, idx) => (
+            {purchases.map((release, idx) => (
               <Col key={idx} className="overflow-hidden">
-                 <a href={item.uri} target="_blank" rel="noreferrer"><Card.Img variant="top" />
+                 <a href={release.uri} target="_blank" rel="noreferrer"><Card.Img variant="top" />
                 <Card>
                 <Card.Img variant="top" src={market}  />
                   <Card.Body color="secondary">
-                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Title>{release.name}</Card.Title>
                     <Card.Text>
-                    {ethers.utils.formatEther(item.totalPrice)} ETH
+                    {ethers.utils.formatEther(release.totalPrice)} ETH
                     </Card.Text>
                   </Card.Body>
                 </Card>
