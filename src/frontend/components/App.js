@@ -10,8 +10,8 @@ import MyListedItems from './MyListedItems.js'
 import MyPurchases from './MyPurchases.js'
 import MarketplaceAbi from '../contractsData/Marketplace.json'
 import MarketplaceAddress from '../contractsData/Marketplace-address.json'
-import NFTAbi from '../contractsData/NFT.json'
-import NFTAddress from '../contractsData/NFT-address.json'
+import MUSICNFTAbi from '../contractsData/MUSICNFT.json'
+import MUSICNFTAddress from '../contractsData/MUSICNFT-address.json'
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Spinner } from 'react-bootstrap'
@@ -21,7 +21,7 @@ import './App.css';
 function App() {
   const [loading, setLoading] = useState(true)
   const [account, setAccount] = useState(null)
-  const [nft, setNFT] = useState({})
+  const [musicnft, setMUSICNFT] = useState({})
   const [marketplace, setMarketplace] = useState({})
   // MetaMask Login/Connect
   const web3Handler = async () => {
@@ -46,8 +46,8 @@ function App() {
     // Get deployed copies of contracts
     const marketplace = new ethers.Contract(MarketplaceAddress.address, MarketplaceAbi.abi, signer)
     setMarketplace(marketplace)
-    const nft = new ethers.Contract(NFTAddress.address, NFTAbi.abi, signer)
-    setNFT(nft)
+    const musicnft = new ethers.Contract(MUSICNFTAddress.address, MUSICNFTAbi.abi, signer)
+    setMUSICNFT(musicnft)
     setLoading(false)
   }
 
@@ -66,16 +66,16 @@ function App() {
           ) : (
             <Routes>
               <Route path="/" element={
-                <Home marketplace={marketplace} nft={nft} />
+                <Home marketplace={marketplace} musicnft={musicnft} />
               } />
               <Route path="/create" element={
-                <Create marketplace={marketplace} nft={nft} />
+                <Create marketplace={marketplace} musicnft={musicnft} />
               } />
-              <Route path="/my-listed-items" element={
-                <MyListedItems marketplace={marketplace} nft={nft} account={account} />
+              <Route path="/my-listed-releases" element={
+                <MyListedItems marketplace={marketplace} musicnft={musicnft} account={account} />
               } />
               <Route path="/my-purchases" element={
-                <MyPurchases marketplace={marketplace} nft={nft} account={account} />
+                <MyPurchases marketplace={marketplace} musicnft={musicnft} account={account} />
               } />
             </Routes>
           )}

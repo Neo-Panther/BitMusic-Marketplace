@@ -1,4 +1,4 @@
-# Music Marketplace
+# Bit Music Marketplace
 
 ## Tools Used
 
@@ -9,7 +9,7 @@
 - [Ethers](https://docs.ethers.io/v5/) (Library for interaction between frontend and the blockchain)
 - [Ipfs](https://ipfs.io/) (Decentralized Music and Metadata storage)
 
-## Setting Up
+## Set Up
 ### 1. Install Dependencies
 `npm install`
 
@@ -24,5 +24,30 @@
 ### 4. Migrate (Complie and Run) Smart Contracts
 `npx hardhat run src/backend/scripts/deploy.js --network localhost`
 
-### 5. Run Frontend React App
+### 5. Set up local ipfs Node
+- Install Ipfs Desktop for your computer from `https://github.com/ipfs/ipfs-desktop/releases` and run it
+- Change the API: HTTPHeaders field to
+```
+"HTTPHeaders": {
+			"Access-Control-Allow-Methods": [
+				"POST",
+				"GET",
+				"PUT"
+			],
+			"Access-Control-Allow-Origin": [
+				"http://localhost:3000",
+				"webui://-",
+				"https://webui.ipfs.io"
+			]
+		}
+```
+and restart the app (this is for the ipfs node to allow our frontend server the access to our ipfs local node's API)
+
+### 6. Disable CORS checks on local browser
+- Install and run a CORS Check Blocker Extension like `Moesif CORS`
+
+### 7. Run Frontend React App
 `npm run start`
+
+### 8. Connect Wallet to Frontend
+- Tap on `Connect Wallet` in the browser

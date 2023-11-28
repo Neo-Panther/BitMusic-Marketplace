@@ -6,34 +6,35 @@ async function main() {
 
   
   // Get the ContractFactories and Signers here.
-  const NFT = await ethers.getContractFactory("NFT");
+  const MUSICNFT = await ethers.getContractFactory("MUSICNFT");
   const Marketplace = await ethers.getContractFactory("Marketplace");
   // deploy contracts
   const marketplace = await Marketplace.deploy(1);
-  const nft = await NFT.deploy();
+  const musicnft = await MUSICNFT.deploy();
   // Save copies of each contracts abi and address to the frontend.
   saveFrontendFiles(marketplace , "Marketplace");
-  saveFrontendFiles(nft , "NFT");
+  saveFrontendFiles(musicnft , "MUSICNFT");
 }
 
 function saveFrontendFiles(contract, name) {
+  // to access the file system
   const fs = require("fs");
-  const contractsDir = __dirname + "/../../frontend/contractsData";
+  const directory = __dirname + "/../../frontend/contractsData";
 
-  if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir);
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
   }
 
   fs.writeFileSync(
-    contractsDir + `/${name}-address.json`,
+    directory + `/${name}-address.json`,
     JSON.stringify({ address: contract.address }, undefined, 2)
   );
 
-  const contractArtifact = artifacts.readArtifactSync(name);
+  const contractABI = artifacts.readArtifactSync(name);
 
   fs.writeFileSync(
-    contractsDir + `/${name}.json`,
-    JSON.stringify(contractArtifact, null, 2)
+    directory + `/${name}.json`,
+    JSON.stringify(contractABI, null, 2)
   );
 }
 

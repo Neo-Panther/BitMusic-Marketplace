@@ -3,28 +3,28 @@ import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import market from './music_store.avif'
 
-const Home = ({ marketplace, nft }) => {
+const Home = ({ marketplace, musicnft }) => {
   const [loading, setLoading] = useState(true)
-  const [items, setItems] = useState([])
-  const loadMarketplaceItems = async () => {
-    // Load all unsold items
-    const itemCount = await marketplace.itemCount()
-    let items = []
-    for (let i = 1; i <= itemCount; i++) {
-      const item = await marketplace.items(i)
-      if (!item.sold) {
-        // get uri url from nft contract
-        const uri = await nft.tokenURI(item.tokenId)
-        // use uri to fetch the nft metadata stored on ipfs 
+  const [releases, setReleases] = useState([])
+  const loadMarketplaceReleases = async () => {
+    // Load all unsold releases
+    const releaseCount = await marketplace.releaseCount()
+    let releases = []
+    for (let i = 1; i <= releaseCount; i++) {
+      const release = await marketplace.releases(i)
+      if (!release.sold) {
+        // get uri url from musicnft contract
+        const uri = await musicnft.tokenURI(release.tokenId)
+        // use uri to fetch the musicnft metadata stored on ipfs 
         const response = await fetch(uri)
         const metadata = await response.json()
-        // get total price of item (item price + fee)
-        const totalPrice = await marketplace.getTotalPrice(item.itemId)
-        // Add item to items array
-        items.push({
+        // get total price of release (release price + fee)
+        const totalPrice = await marketplace.getTotalPrice(release.releaseId)
+        // Add release to releases array
+        releases.push({
           totalPrice,
-          itemId: item.itemId,
-          seller: item.seller,
+          releaseId: release.releaseId,
+          seller: release.seller,
           name: metadata.name,
           description: metadata.description,
           uri: metadata.music
@@ -32,16 +32,16 @@ const Home = ({ marketplace, nft }) => {
       }
     }
     setLoading(false)
-    setItems(items)
+    setReleases(releases)
   }
 
-  const buyMarketItem = async (item) => {
-    await (await marketplace.purchaseItem(item.itemId, { value: item.totalPrice })).wait()
-    loadMarketplaceItems()
+  const buyMarketRelease = async (release) => {
+    await (await marketplace.purchaseRelease(release.releaseId, { value: release.totalPrice })).wait()
+    loadMarketplaceReleases()
   }
 
   useEffect(() => {
-    loadMarketplaceItems()
+    loadMarketplaceReleases()
   })
   if (loading) return (
     <main style={{ padding: "1rem 0" }}>
@@ -50,24 +50,24 @@ const Home = ({ marketplace, nft }) => {
   )
   return (
     <div className="flex justify-center">
-      {items.length > 0 ?
+      {releases.length > 0 ?
         <div className="px-5 container">
           <Row xs={1} md={2} lg={4} className="g-4 py-5">
-            {items.map((item, idx) => (
+            {releases.map((release, idx) => (
               <Col key={idx} className="overflow-hidden">
                  
                 <Card>
                 <Card.Img variant="top" src={market}  />
                   <Card.Body color="secondary">
-                    <Card.Title>{item.name}</Card.Title>
+                    <Card.Title>{release.name}</Card.Title>
                     <Card.Text>
-                      {item.description}
+                      {release.description}
                     </Card.Text>
                   </Card.Body>
                   <Card.Footer>
                     <div className='d-grid'>
-                      <Button onClick={() => buyMarketItem(item)} variant="primary" size="lg">
-                        Buy for {ethers.utils.formatEther(item.totalPrice)} ETH
+                      <Button onClick={() => buyMarketRelease(release)} variant="primary" size="lg">
+                        Buy for {ethers.utils.formatEther(release.totalPrice)} ETH
                       </Button>
                     </div>
                   </Card.Footer>

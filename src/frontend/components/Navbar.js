@@ -16,8 +16,8 @@ const Navigation = ({ web3Handler, account }) => {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={Link} to="/">Home</Nav.Link>
-                        <Nav.Link as={Link} to="/create">Upload Item</Nav.Link>
-                        <Nav.Link as={Link} to="/my-listed-items">My Items</Nav.Link>
+                        <Nav.Link as={Link} to="/create">Upload Release</Nav.Link>
+                        <Nav.Link as={Link} to="/my-listed-releases">My Releases</Nav.Link>
                         <Nav.Link as={Link} to="/my-purchases">My Purchases</Nav.Link>
                     </Nav>
                     <img src={market} width="150" height="150" className="" alt="" />
