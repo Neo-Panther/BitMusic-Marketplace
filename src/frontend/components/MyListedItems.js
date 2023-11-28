@@ -66,7 +66,7 @@ export default function MyListedReleases({ marketplace, musicnft, account }) {
   useEffect(() => {
     loadListedReleases()
   })
-  if (loading) return (
+  if (updating) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
