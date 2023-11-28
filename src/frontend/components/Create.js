@@ -46,7 +46,7 @@ const Create = ({ marketplace, musicnft }) => {
     await(await marketplace.makeRelease(musicnft.address, id, listingPrice)).wait()
   }
   return (
-    <div className="container-fluid mt-5">
+    <div className="container-fluid mt-5" bg='light'>
       <div className="row">
         <main role="main" className="col-lg-12 mx-auto" style={{ maxWidth: '1000px' }}>
           <div className="content mx-auto">

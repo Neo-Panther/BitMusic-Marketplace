@@ -26,11 +26,11 @@ function renderSoldReleases(releases) {
   )
 }
 
-export default function MyListedItems({ marketplace, nft, account }) {
+export default function MyListedItems({ marketplace,musicnft, account }) {
   const [loading, setLoading] = useState(true)
   const [listedItems, setListedItems] = useState([])
   const [soldItems, setSoldItems] = useState([])
-  const loadListedItems = async () => {
+  const loadListedReleases = async () => {
     // Load all sold items that the user listed
     const itemCount = await marketplace.itemCount()
     let listedItems = []
@@ -54,9 +54,9 @@ export default function MyListedItems({ marketplace, nft, account }) {
           description: metadata.description,
           uri: metadata.music
         }
-        listedItems.push(item)
+        listedItems.push(release)
         // Add listed item to sold items array if sold
-        if (i.sold) soldItems.push(item)
+        if (i.sold) soldItems.push(release)
       }
     }
     setLoading(false)
@@ -66,7 +66,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
   useEffect(() => {
     loadListedReleases()
   })
-  if (updating) return (
+  if (loading) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
@@ -77,7 +77,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
         <div className="px-5 py-3 container">
             <h2>Listed</h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-3">
-            {listedItems.map((item, idx) => (
+            {listedItems.map((release, idx) => (
               <Col key={idx} className="overflow-hidden">
                  <a href={release.uri} target="_blank" rel="noreferrer"><Card.Img variant="top" />
                 <Card>
@@ -90,7 +90,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
               </Col>
             ))}
           </Row>
-            {soldItems.length > 0 && renderSoldItems(soldItems)}
+            {soldItems.length > 0 && renderSoldReleases(soldItems)}
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
