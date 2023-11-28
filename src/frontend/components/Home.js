@@ -4,7 +4,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap'
 import market from './music_store.avif'
 
 const Home = ({ marketplace, musicnft }) => {
-  const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(true)
   const [releases, setReleases] = useState([])
   const loadMarketplaceReleases = async () => {
     // Load all unsold releases
@@ -31,7 +31,7 @@ const Home = ({ marketplace, musicnft }) => {
         })
       }
     }
-    setLoading(false)
+    setUpdating(false)
     setReleases(releases)
   }
 
@@ -43,7 +43,7 @@ const Home = ({ marketplace, musicnft }) => {
   useEffect(() => {
     loadMarketplaceReleases()
   })
-  if (loading) return (
+  if (updating) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>

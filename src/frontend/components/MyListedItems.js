@@ -26,17 +26,17 @@ function renderSoldReleases(releases) {
   )
 }
 
-export default function MyListedItems({ marketplace,musicnft, account }) {
-  const [loading, setLoading] = useState(true)
-  const [listedItems, setListedItems] = useState([])
-  const [soldItems, setSoldItems] = useState([])
+export default function MyListedReleases({ marketplace, musicnft, account }) {
+  const [updating, setUpdating] = useState(true)
+  const [listedReleases, setListedReleases] = useState([])
+  const [soldReleases, setSoldReleases] = useState([])
   const loadListedReleases = async () => {
-    // Load all sold items that the user listed
-    const itemCount = await marketplace.itemCount()
-    let listedItems = []
-    let soldItems = []
-    for (let indx = 1; indx <= itemCount; indx++) {
-      const i = await marketplace.items(indx)
+    // Load all sold releases that the user listed
+    const releaseCount = await marketplace.releaseCount()
+    let listedReleases = []
+    let soldReleases = []
+    for (let indx = 1; indx <= releaseCount; indx++) {
+      const i = await marketplace.releases(indx)
       if (i.seller.toLowerCase() === account) {
         // get uri url from musicnft contract
         const uri = await musicnft.tokenURI(i.tokenId)
@@ -54,30 +54,30 @@ export default function MyListedItems({ marketplace,musicnft, account }) {
           description: metadata.description,
           uri: metadata.music
         }
-        listedItems.push(release)
-        // Add listed item to sold items array if sold
-        if (i.sold) soldItems.push(release)
+        listedReleases.push(release)
+        // Add listed release to sold releases array if sold
+        if (i.sold) soldReleases.push(release)
       }
     }
-    setLoading(false)
-    setListedItems(listedItems)
-    setSoldItems(soldItems)
+    setUpdating(false)
+    setListedReleases(listedReleases)
+    setSoldReleases(soldReleases)
   }
   useEffect(() => {
     loadListedReleases()
   })
-  if (loading) return (
+  if (updating) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
   )
   return (
     <div className="flex justify-center">
-      {listedItems.length > 0 ?
+      {listedReleases.length > 0 ?
         <div className="px-5 py-3 container">
             <h2>Listed</h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-3">
-            {listedItems.map((release, idx) => (
+            {listedReleases.map((release, idx) => (
               <Col key={idx} className="overflow-hidden">
                  <a href={release.uri} target="_blank" rel="noreferrer"><Card.Img variant="top" />
                 <Card>
@@ -90,7 +90,7 @@ export default function MyListedItems({ marketplace,musicnft, account }) {
               </Col>
             ))}
           </Row>
-            {soldItems.length > 0 && renderSoldReleases(soldItems)}
+            {soldReleases.length > 0 && renderSoldReleases(soldReleases)}
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>

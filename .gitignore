@@ -4,3 +4,5 @@ src/backend/artifacts
 src/backend/artifacts/*
 src/backend/cache
 src/backend/cache/*
+src/frontend/contractsData/*
+src/frontend/contractsData
