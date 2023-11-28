@@ -28,13 +28,13 @@ const Navigation = ({ web3Handler, account }) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="button nav-button btn-sm mx-4">
-                                <Button variant="outline-dark">
+                                <Button variant="outline-light">
                                     {account.slice(0, 5) + '...' + account.slice(38, 42)}
                                 </Button>
 
                             </Nav.Link>
                         ) : (
-                            <Button onClick={web3Handler} variant="outline-dark">Connect Wallet</Button>
+                            <Button onClick={web3Handler} variant="outline-light">Connect Wallet</Button>
                         )}
                     </Nav>
                 </Navbar.Collapse>
