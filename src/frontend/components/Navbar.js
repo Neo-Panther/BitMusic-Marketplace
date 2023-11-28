@@ -6,10 +6,10 @@ import market from './bit_music.png'
 
 const Navigation = ({ web3Handler, account }) => {
     return (
-        <Navbar expand="sm" bg="blue" variant="light">
+        <Navbar expand="sm" bg="dark" variant="dark">
             <Container>
                 <Navbar.Brand href="">
-                    <img src={market} width="200" height="200" className="" alt="" />
+                    <img src={market} width="100" height="100" className="" alt="" />
                     &nbsp; BITMUSIC 
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
