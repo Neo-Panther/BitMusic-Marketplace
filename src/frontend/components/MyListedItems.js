@@ -26,7 +26,7 @@ function renderSoldReleases(releases) {
   )
 }
 
-export default function MyListedReleases({ marketplace, nft, account }) {
+export default function MyListedReleases({ marketplace, musicnft, account }) {
   const [loading, setLoading] = useState(true)
   const [listedReleases, setListedReleases] = useState([])
   const [soldReleases, setSoldReleases] = useState([])
@@ -38,9 +38,9 @@ export default function MyListedReleases({ marketplace, nft, account }) {
     for (let indx = 1; indx <= releaseCount; indx++) {
       const i = await marketplace.releases(indx)
       if (i.seller.toLowerCase() === account) {
-        // get uri url from nft contract
-        const uri = await nft.tokenURI(i.tokenId)
-        // use uri to fetch the nft metadata stored on ipfs 
+        // get uri url from musicnft contract
+        const uri = await musicnft.tokenURI(i.tokenId)
+        // use uri to fetch the musicnft metadata stored on ipfs 
         const response = await fetch(uri)
         const metadata = await response.json()
         // get total price of release (release price + fee)

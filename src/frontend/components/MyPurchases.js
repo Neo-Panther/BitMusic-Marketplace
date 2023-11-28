@@ -3,20 +3,20 @@ import { ethers } from "ethers"
 import { Row, Col, Card} from 'react-bootstrap'
 import market from './music_store.avif'
 
-export default function MyPurchases({ marketplace, nft, account }) {
+export default function MyPurchases({ marketplace, musicnft, account }) {
   const [loading, setLoading] = useState(true)
   const [purchases, setPurchases] = useState([])
   const loadPurchasedReleases = async () => {
     // Fetch purchased releases from marketplace by quering Offered events with the buyer set as the user
     const filter =  marketplace.filters.Bought(null,null,null,null,null,account)
     const results = await marketplace.queryFilter(filter)
-    //Fetch metadata of each nft and add that to listedRelease object.
+    //Fetch metadata of each musicnft and add that to listedRelease object.
     const purchases = await Promise.all(results.map(async i => {
       // fetch arguments from each result
       i = i.args
-      // get uri url from nft contract
-      const uri = await nft.tokenURI(i.tokenId)
-      // use uri to fetch the nft metadata stored on ipfs 
+      // get uri url from musicnft contract
+      const uri = await musicnft.tokenURI(i.tokenId)
+      // use uri to fetch the musicnft metadata stored on ipfs 
       const response = await fetch(uri)
       const metadata = await response.json()
       // get total price of release (release price + fee)

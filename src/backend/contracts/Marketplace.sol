@@ -12,7 +12,7 @@ contract Marketplace is ReentrancyGuard {
 
   struct Release {
     uint releaseId;
-    IERC721 nft;
+    IERC721 musicnft;
     uint tokenId;
     uint price;
     address payable seller;
@@ -24,14 +24,14 @@ contract Marketplace is ReentrancyGuard {
 
   event Offered(
     uint releaseId,
-    address indexed nft,
+    address indexed musicnft,
     uint tokenId,
     uint price,
     address indexed seller
   );
   event Bought(
     uint releaseId,
-    address indexed nft,
+    address indexed musicnft,
     uint tokenId,
     uint price,
     address indexed seller,
@@ -44,15 +44,15 @@ contract Marketplace is ReentrancyGuard {
   }
 
   // Make release to offer on the marketplace
-  function makeRelease(IERC721 _nft, uint _tokenId, uint _price) external nonReentrant {
+  function makeRelease(IERC721 _musicnft, uint _tokenId, uint _price) external nonReentrant {
     require(_price > 0, "Price must be greater than zero");
     releaseCount ++;
-    // transfer nft
-    _nft.transferFrom(msg.sender, address(this), _tokenId);
+    // transfer musicnft
+    _musicnft.transferFrom(msg.sender, address(this), _tokenId);
     // add new release to releases mapping
     releases[releaseCount] = Release (
       releaseCount,
-      _nft,
+      _musicnft,
       _tokenId,
       _price,
       payable(msg.sender),
@@ -61,18 +61,18 @@ contract Marketplace is ReentrancyGuard {
     // emit Offered event
     emit Offered(
       releaseCount,
-      address(_nft),
+      address(_musicnft),
       _tokenId,
       _price,
       msg.sender
     );
   }
   function relist(Release memory release) external nonReentrant {
-    release.nft.transferFrom(msg.sender, address(this), release.tokenId);
+    release.musicnft.transferFrom(msg.sender, address(this), release.tokenId);
     // emit Offered event
     emit Offered(
       releaseCount,
-      address(release.nft),
+      address(release.musicnft),
       release.tokenId,
       release.price,
       msg.sender
@@ -89,12 +89,12 @@ contract Marketplace is ReentrancyGuard {
     hostAcc.transfer(_totalPrice - release.price);
     // update release to sold
     release.sold = true;
-    // transfer nft to buyer
-    release.nft.transferFrom(address(this), msg.sender, release.tokenId);
+    // transfer musicnft to buyer
+    release.musicnft.transferFrom(address(this), msg.sender, release.tokenId);
     // emit Bought event
     emit Bought(
       _releaseId,
-      address(release.nft),
+      address(release.musicnft),
       release.tokenId,
       release.price,
       release.seller,

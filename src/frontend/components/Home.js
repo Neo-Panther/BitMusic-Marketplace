@@ -3,7 +3,7 @@ import { ethers } from "ethers"
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import market from './music_store.avif'
 
-const Home = ({ marketplace, nft }) => {
+const Home = ({ marketplace, musicnft }) => {
   const [loading, setLoading] = useState(true)
   const [releases, setReleases] = useState([])
   const loadMarketplaceReleases = async () => {
@@ -13,9 +13,9 @@ const Home = ({ marketplace, nft }) => {
     for (let i = 1; i <= releaseCount; i++) {
       const release = await marketplace.releases(i)
       if (!release.sold) {
-        // get uri url from nft contract
-        const uri = await nft.tokenURI(release.tokenId)
-        // use uri to fetch the nft metadata stored on ipfs 
+        // get uri url from musicnft contract
+        const uri = await musicnft.tokenURI(release.tokenId)
+        // use uri to fetch the musicnft metadata stored on ipfs 
         const response = await fetch(uri)
         const metadata = await response.json()
         // get total price of release (release price + fee)
