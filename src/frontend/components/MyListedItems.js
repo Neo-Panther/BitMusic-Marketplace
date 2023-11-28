@@ -27,14 +27,14 @@ function renderSoldItems(items) {
 }
 
 export default function MyListedItems({ marketplace, nft, account }) {
-  const [loading, setLoading] = useState(true)
-  const [listedItems, setListedItems] = useState([])
-  const [soldItems, setSoldItems] = useState([])
+  const [updating, setUpdating] = useState(true)
+  const [listedMusic, setListedMusic] = useState([])
+  const [soldMusic, setSoldMusic] = useState([])
   const loadListedItems = async () => {
     // Load all sold items that the user listed
     const itemCount = await marketplace.itemCount()
     let listedItems = []
-    let soldItems = []
+    let soldMusic = []
     for (let indx = 1; indx <= itemCount; indx++) {
       const i = await marketplace.items(indx)
       if (i.seller.toLowerCase() === account) {
@@ -56,28 +56,28 @@ export default function MyListedItems({ marketplace, nft, account }) {
         }
         listedItems.push(item)
         // Add listed item to sold items array if sold
-        if (i.sold) soldItems.push(item)
+        if (i.sold) soldMusic.push(item)
       }
     }
-    setLoading(false)
-    setListedItems(listedItems)
-    setSoldItems(soldItems)
+    setUpdating(false)
+    setListedMusic(listedItems)
+    setSoldMusic(soldMusic)
   }
   useEffect(() => {
     loadListedItems()
   })
-  if (loading) return (
+  if (updating) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
   )
   return (
     <div className="flex justify-center">
-      {listedItems.length > 0 ?
+      {listedMusic.length > 0 ?
         <div className="px-5 py-3 container">
             <h2>Listed</h2>
           <Row xs={1} md={2} lg={4} className="g-4 py-3">
-            {listedItems.map((item, idx) => (
+            {listedMusic.map((item, idx) => (
               <Col key={idx} className="overflow-hidden">
                  <a href={item.uri} target="_blank" rel="noreferrer"><Card.Img variant="top" />
                 <Card>
@@ -90,7 +90,7 @@ export default function MyListedItems({ marketplace, nft, account }) {
               </Col>
             ))}
           </Row>
-            {soldItems.length > 0 && renderSoldItems(soldItems)}
+            {soldMusic.length > 0 && renderSoldItems(soldMusic)}
         </div>
         : (
           <main style={{ padding: "1rem 0" }}>
