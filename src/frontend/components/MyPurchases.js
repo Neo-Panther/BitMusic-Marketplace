@@ -4,7 +4,7 @@ import { Row, Col, Card} from 'react-bootstrap'
 import market from './music_store.avif'
 
 export default function MyPurchases({ marketplace, musicnft, account }) {
-  const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(true)
   const [purchases, setPurchases] = useState([])
   const loadPurchasedReleases = async () => {
     // Fetch purchased releases from marketplace by quering Offered events with the buyer set as the user
@@ -32,13 +32,13 @@ export default function MyPurchases({ marketplace, musicnft, account }) {
       }
       return purchasedRelease
     }))
-    setLoading(false)
+    setUpdating(false)
     setPurchases(purchases)
   }
   useEffect(() => {
     loadPurchasedReleases()
   })
-  if (loading) return (
+  if (updating) return (
     <main style={{ padding: "1rem 0" }}>
       <h2>Loading...</h2>
     </main>
