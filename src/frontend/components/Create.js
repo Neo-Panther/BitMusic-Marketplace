@@ -24,7 +24,6 @@ const Create = ({ marketplace, musicnft }) => {
     }
   }
   const makeFile = async () => {
-    console.log("1")
     if (!music || !price || !title || !description || !publisher) return
     try{
       const result = await client.add(JSON.stringify({music, price, name: title, description,publisher}))

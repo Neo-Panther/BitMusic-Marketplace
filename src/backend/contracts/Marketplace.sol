@@ -67,17 +67,6 @@ contract Marketplace is ReentrancyGuard {
       msg.sender
     );
   }
-  function relist(Release memory release) external nonReentrant {
-    release.musicnft.transferFrom(msg.sender, address(this), release.tokenId);
-    // emit Offered event
-    emit Offered(
-      releaseCount,
-      address(release.musicnft),
-      release.tokenId,
-      release.price,
-      msg.sender
-    );
-  }
   function purchaseRelease(uint _releaseId) external payable nonReentrant {
     uint _totalPrice = getTotalPrice(_releaseId);
     Release storage release = releases[_releaseId];
