@@ -1,5 +1,7 @@
 # Bit Music Marketplace
 
+A dApp to upload, buy and resell music files using cryptocurrency. Ipfs is used to store the files in a decentralized way, react is used for frontend, solidity for backend and ethers for api between them.
+
 ## Tools Used
 
 - Solidity (Smart Contracts)
@@ -10,6 +12,9 @@
 - [Ipfs](https://ipfs.io/) (Decentralized Music and Metadata storage)
 
 ## Set Up
+
+Do the following in the root folder after cloning the repo in that folder.
+
 ### 1. Install Dependencies
 `npm install`
 
